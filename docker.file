@@ -1,5 +1,5 @@
 FROM scratch
-ADD ca-certificates.crt /etc/ssl/certs/
+ADD /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 ADD vault vault
 ADD vault.hcl vault.hcl
 EXPOSE 80
