@@ -144,7 +144,7 @@ resource "aws_route53_zone" "ZONE" {
     Name = "${var.NAME}"
   }
 }
-/*
+
 resource "aws_route53_record" "CERTIFICATE_RECORDS" {
   name = "${aws_acm_certificate.CERTIFICATE.domain_validation_options.0.resource_record_name}"
   records = ["${aws_acm_certificate.CERTIFICATE.domain_validation_options.0.resource_record_value}"]
@@ -157,4 +157,3 @@ resource "aws_acm_certificate_validation" "VALIDATION" {
   certificate_arn = "${aws_acm_certificate.CERTIFICATE.arn}"
   validation_record_fqdns = ["${aws_route53_record.CERTIFICATE_RECORDS.*.fqdn}"]
 }
-*/
