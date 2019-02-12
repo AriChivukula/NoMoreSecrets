@@ -8,3 +8,7 @@ if: type = push
 script:
 - bash vault.sh
 - bash docker.sh
+- bash terraform.sh
+deploy:
+  provider: script
+  script: terraform apply -auto-approve .
