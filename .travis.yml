@@ -1,5 +1,4 @@
 dist: xenial
-language: go
 if: type = push
 services:
 - docker
