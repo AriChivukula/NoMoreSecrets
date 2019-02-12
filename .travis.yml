@@ -8,3 +8,5 @@ script:
 - cd vault
 - make bootstrap
 - make dev
+- make test
+- make bin
