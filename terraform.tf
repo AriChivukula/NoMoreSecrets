@@ -251,7 +251,7 @@ resource "aws_ecs_task_definition" "TASK" {
 [
   {
     "name": "${var.NAME}",
-    "image": "jhpyle/docassemble:latest",
+    "image": "617580300246.dkr.ecr.us-east-1.amazonaws.com/nomoresecrets:master",
     "essential": true,
     "portMappings": [
       {
