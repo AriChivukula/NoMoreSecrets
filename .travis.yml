@@ -1,5 +1,6 @@
 linux: xenial
 language: go
+if: type = push
 services:
 - docker
 script:
