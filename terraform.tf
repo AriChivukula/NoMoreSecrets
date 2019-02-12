@@ -164,6 +164,24 @@ resource "aws_acm_certificate_validation" "VALIDATION" {
   validation_record_fqdns = ["${aws_route53_record.CERTIFICATE_RECORDS.*.fqdn}"]
 }
 
+resource "aws_iam_role" "IAM" {
+  name = "${var.NAME}"
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "ecs-tasks.amazonaws.com"
+      },
+      "Effect": "Allow"
+    }
+  ]
+}
+EOF
+}
+
 resource "aws_lb" "LB" {
   name = "${var.NAME}"
   subnets = ["${aws_subnet.PUBLIC_SUBNETS.*.id}"]
