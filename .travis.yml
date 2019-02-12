@@ -1,8 +1,10 @@
 dist: xenial
-if: type = push
+language: python
+python:
+- "3.7"
 services:
 - docker
+if: type = push
 script:
 - bash vault.sh
-- bash aws.sh
 - bash docker.sh
