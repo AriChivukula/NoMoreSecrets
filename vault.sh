@@ -1,10 +1,5 @@
 set -e
 
-mkdir -p $GOPATH/src/github.com/hashicorp
-cd $GOPATH/src/github.com/hashicorp
-git clone https://github.com/hashicorp/vault.git
-cd vault
-make bootstrap
-make dev
-make test
-make bin
+wget https://releases.hashicorp.com/vault/1.0.2/vault_1.0.2_linux_amd64.zip
+unzip vault_1.0.2_linux_amd64.zip
+rm vault_1.0.2_linux_amd64.zip
