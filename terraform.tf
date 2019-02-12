@@ -182,6 +182,30 @@ resource "aws_iam_role" "IAM" {
 EOF
 }
 
+resource "aws_iam_role_policy" "POLICY" {
+  name = "${var.NAME}"
+  role = "${aws_iam_role.IAM.id}"
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ecr:GetAuthorizationToken",
+        "ecr:BatchCheckLayerAvailability",
+        "ecr:GetDownloadUrlForLayer",
+        "ecr:BatchGetImage",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+EOF
+}
+
 resource "aws_lb" "LB" {
   name = "${var.NAME}"
   subnets = ["${aws_subnet.PUBLIC_SUBNETS.*.id}"]
