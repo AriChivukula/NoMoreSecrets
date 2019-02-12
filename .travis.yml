@@ -1,7 +1,10 @@
-linux: xenial
+dist: xenial
 language: go
 if: type = push
 services:
 - docker
 script:
 - git clone https://github.com/hashicorp/vault.git
+- cd vault
+- make bootstrap
+- make dev
