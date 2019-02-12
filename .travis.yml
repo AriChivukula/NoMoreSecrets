@@ -11,4 +11,4 @@ script:
 - bash terraform.sh
 deploy:
   provider: script
-  script: terraform apply -auto-approve terraform.hcl
+  script: terraform apply -auto-approve .
