@@ -108,7 +108,7 @@ resource "aws_route" "BRIDGE_ROUTE" {
 resource "aws_route_table_association" "PRIVATE_ROUTES" {
   count = "${length(data.aws_availability_zones.AZS.names)}"
   subnet_id = "${element(aws_subnet.PRIVATE_SUBNETS.*.id, count.index)}"
-  route_table_id = "${aws_route_table.PRIVATE_TABLE.id}"
+  route_table_id = "${aws_route_table.NAT_TABLE.id}"
 }
 
 resource "aws_security_group" "SECURITY" {
