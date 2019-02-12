@@ -5,6 +5,11 @@ python:
 services:
 - docker
 if: type = push
+env:
+  global:
+  - TF_VAR_AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID 
+  - TF_VAR_AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION 
+  - TF_VAR_AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
 script:
 - bash vault.sh
 - bash docker.sh
