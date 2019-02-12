@@ -127,3 +127,34 @@ resource "aws_security_group" "SECURITY" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
+
+resource "aws_acm_certificate" "CERTIFICATE" {
+  domain_name = "${var.DOMAIN}"
+  validation_method = "DNS"
+
+  tags {
+    Name = "${var.NAME}"
+  }
+}
+
+resource "aws_route53_zone" "ZONE" {
+  name = "${var.DOMAIN}."
+
+  tags {
+    Name = "${var.NAME}"
+  }
+}
+/*
+resource "aws_route53_record" "CERTIFICATE_RECORDS" {
+  name = "${aws_acm_certificate.CERTIFICATE.domain_validation_options.0.resource_record_name}"
+  records = ["${aws_acm_certificate.CERTIFICATE.domain_validation_options.0.resource_record_value}"]
+  ttl = 60
+  type = "${aws_acm_certificate.CERTIFICATE.domain_validation_options.0.resource_record_type}"
+  zone_id = "${aws_route53_zone.ZONE.zone_id}"
+}
+
+resource "aws_acm_certificate_validation" "VALIDATION" {
+  certificate_arn = "${aws_acm_certificate.CERTIFICATE.arn}"
+  validation_record_fqdns = ["${aws_route53_record.CERTIFICATE_RECORDS.*.fqdn}"]
+}
+*/
