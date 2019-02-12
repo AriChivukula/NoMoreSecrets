@@ -157,3 +157,4 @@ resource "aws_acm_certificate_validation" "VALIDATION" {
   certificate_arn = "${aws_acm_certificate.CERTIFICATE.arn}"
   validation_record_fqdns = ["${aws_route53_record.CERTIFICATE_RECORDS.*.fqdn}"]
 }
+
