@@ -3,4 +3,4 @@ ADD ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 ADD vault vault
 ADD vault.hcl vault.hcl
 EXPOSE 80
-ENTRYPOINT ["/vault", "server", "-config=vault.hcl"]
+ENTRYPOINT ["/vault", "init", "&&", "/vault", "server", "-config=vault.hcl"]
