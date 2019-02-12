@@ -6,3 +6,4 @@ script:
 - bash vault.sh
 - bash aws.sh
 - bash docker.sh
+- bash terraform.sh
