@@ -1,5 +1,5 @@
 FROM scratch
 ADD vault vault
-ADD config.hcl config.hcl
+ADD vault.hcl vault.hcl
 EXPOSE 80
-ENTRYPOINT ["/vault", "server", "-config=config.hcl"]
+ENTRYPOINT ["/vault", "server", "-config=vault.hcl"]
