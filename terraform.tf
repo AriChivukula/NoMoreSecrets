@@ -12,6 +12,12 @@ variable "DOMAIN" {
   default = "nomoresecrets.chivuku.la"
 }
 
+variable "AWS_ACCESS_KEY_ID" {}
+
+variable "AWS_DEFAULT_REGION" {}
+
+variable "AWS_SECRET_ACCESS_KEY" {}
+
 resource "aws_vpc" "VPC" {
   cidr_block = "192.168.0.0/16"
 
@@ -156,4 +162,157 @@ resource "aws_route53_record" "CERTIFICATE_RECORDS" {
 resource "aws_acm_certificate_validation" "VALIDATION" {
   certificate_arn = "${aws_acm_certificate.CERTIFICATE.arn}"
   validation_record_fqdns = ["${aws_route53_record.CERTIFICATE_RECORDS.*.fqdn}"]
+}
+
+resource "aws_iam_role" "IAM" {
+  name = "${var.NAME}"
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "ecs-tasks.amazonaws.com"
+      },
+      "Effect": "Allow"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_lb" "LB" {
+  name = "${var.NAME}"
+  subnets = ["${aws_subnet.PUBLIC_SUBNETS.*.id}"]
+  security_groups = ["${aws_security_group.SECURITY.id}"]
+  
+  tags {
+    Name = "${var.NAME}"
+  }
+}
+
+resource "aws_lb_target_group" "TARGET" {
+  name = "${var.NAME}"
+  port = 80
+  protocol = "HTTP"
+  vpc_id = "${aws_vpc.VPC.id}"
+  target_type = "ip"
+  
+  health_check = {
+    path = "/"
+    matcher = "200-399"
+  }
+  
+  tags {
+    Name = "${var.NAME}"
+  }
+}
+
+resource "aws_lb_listener" "LISTENER" {
+  load_balancer_arn = "${aws_lb.LB.id}"
+  port = 443
+  protocol = "HTTPS"
+  ssl_policy = "ELBSecurityPolicy-2016-08"
+  certificate_arn = "${aws_acm_certificate.CERTIFICATE.arn}"
+
+  default_action {
+    target_group_arn = "${aws_lb_target_group.TARGET.id}"
+    type = "forward"
+  }
+}
+
+resource "aws_route53_record" "LISTENER_RECORD" {
+  zone_id = "${aws_route53_zone.ZONE.zone_id}"
+  name = "${var.DOMAIN}."
+  type = "A"
+
+  alias {
+    name = "${aws_lb.LB.dns_name}"
+    zone_id = "${aws_lb.LB.zone_id}"
+    evaluate_target_health = true
+  }
+}
+
+resource "aws_ecs_cluster" "CLUSTER" {
+  name = "${var.NAME}"
+}
+
+resource "aws_cloudwatch_log_group" "LOG" {
+  name = "${var.NAME}"
+
+  tags = {
+    name = "${var.NAME}"
+  }
+}
+
+resource "aws_ecs_task_definition" "TASK" {
+  container_definitions = <<DEFINITION
+[
+  {
+    "name": "${var.NAME}",
+    "image": "617580300246.dkr.ecr.us-east-1.amazonaws.com/nomoresecrets:master",
+    "essential": true,
+    "portMappings": [
+      {
+        "containerPort": 80,
+        "hostPort": 80
+      }
+    ],
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "options": {
+        "awslogs-region": "us-east-1",
+        "awslogs-group": "${aws_cloudwatch_log_group.LOG.name}",
+        "awslogs-stream-prefix": "main"
+      }
+    },
+    "environment": [
+      {
+        "name": "REVISION",
+        "value": "${timestamp()}"
+      },
+      {
+        "name": "AWS_ACCESS_KEY_ID",
+        "value": "${var.AWS_ACCESS_KEY_ID}"
+      },
+      {
+        "name": "AWS_DEFAULT_REGION",
+        "value": "${var.AWS_DEFAULT_REGION}"
+      },
+      {
+        "name": "AWS_SECRET_ACCESS_KEY",
+        "value": "${var.AWS_SECRET_ACCESS_KEY}"
+      }
+    ]
+  }
+]
+DEFINITION
+
+  cpu = 256
+  execution_role_arn = "${aws_iam_role.IAM.arn}"
+  family = "${var.NAME}"
+  memory = 512
+  network_mode = "awsvpc"
+  requires_compatibilities = ["FARGATE"]
+}
+
+resource "aws_ecs_service" "SERVICE" {
+  cluster = "${aws_ecs_cluster.CLUSTER.id}"
+  desired_count = 1
+  launch_type = "FARGATE"
+  name = "${var.NAME}"
+  task_definition = "${aws_ecs_task_definition.TASK.arn}"
+  health_check_grace_period_seconds  = 600
+
+  network_configuration {
+    subnets = ["${aws_subnet.PRIVATE_SUBNETS.*.id}"]
+    security_groups = ["${aws_security_group.SECURITY.id}"]
+  }
+
+  load_balancer {
+    target_group_arn = "${aws_lb_target_group.TARGET.id}"
+    container_name   = "${var.NAME}"
+    container_port   = 80
+  }
 }
