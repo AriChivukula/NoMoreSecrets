@@ -12,5 +12,3 @@ script:
 deploy:
   provider: script
   script: terraform apply -auto-approve terraform.hcl
-  on:
-    tags: true
