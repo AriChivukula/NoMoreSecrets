@@ -11,4 +11,6 @@ storage "s3" {
   bucket = "nomoresecrets"
 }
 
+disable_mlock = true
+
 ui = true
