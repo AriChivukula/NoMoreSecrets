@@ -1,5 +1,7 @@
+disable_mlock = true
+
 listener "tcp" {
-  address = "127.0.0.1:80"
+  address = "0.0.0.0:80"
   tls_disable = 1
 }
 
@@ -10,7 +12,5 @@ seal "awskms" {
 storage "s3" {
   bucket = "nomoresecrets"
 }
-
-disable_mlock = true
 
 ui = true
