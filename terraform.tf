@@ -220,7 +220,7 @@ resource "aws_lb" "LB" {
 
 resource "aws_lb_target_group" "TARGET" {
   name = "${var.NAME}"
-  port = 80
+  port = 8200
   protocol = "HTTP"
   vpc_id = "${aws_vpc.VPC.id}"
   target_type = "ip"
@@ -281,8 +281,12 @@ resource "aws_ecs_task_definition" "TASK" {
     "essential": true,
     "portMappings": [
       {
-        "containerPort": 80,
-        "hostPort": 80
+        "containerPort": 8200,
+        "hostPort": 8200
+      },
+      {
+        "containerPort": 8201,
+        "hostPort": 8201
       }
     ],
     "logConfiguration": {
@@ -339,6 +343,6 @@ resource "aws_ecs_service" "SERVICE" {
   load_balancer {
     target_group_arn = "${aws_lb_target_group.TARGET.id}"
     container_name   = "${var.NAME}"
-    container_port   = 80
+    container_port   = 8200
   }
 }
