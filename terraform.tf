@@ -25,6 +25,7 @@ data "aws_vpc" "VPC" {
 }
 
 data "aws_subnet_ids" "PUBLIC_SUBNETS" {
+  vpc_id = "${data.aws_vpc.VPC.id}"
   tags {
     Name = "aol"
     Type = "Public"
@@ -32,6 +33,7 @@ data "aws_subnet_ids" "PUBLIC_SUBNETS" {
 }
 
 data "aws_subnet_ids" "PRIVATE_SUBNETS" {
+  vpc_id = "${var.vpc_id}"
   tags {
     Name = "aol"
     Type = "Private"
