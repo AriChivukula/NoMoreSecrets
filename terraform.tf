@@ -133,7 +133,7 @@ EOF
 
 resource "aws_lb" "LB" {
   name = "${var.NAME}"
-  subnets = "${data.aws_subnet_ids.PUBLIC_SUBNETS.ids}"
+  subnets = ${data.aws_subnet_ids.PUBLIC_SUBNETS.ids}
   security_groups = ["${aws_security_group.SECURITY.id}"]
   
   tags {
@@ -259,7 +259,7 @@ resource "aws_ecs_service" "SERVICE" {
   health_check_grace_period_seconds  = 600
 
   network_configuration {
-    subnets = "${data.aws_subnet_ids.PRIVATE_SUBNETS.ids}"
+    subnets = ${data.aws_subnet_ids.PRIVATE_SUBNETS.ids}
     security_groups = ["${aws_security_group.SECURITY.id}"]
   }
 
