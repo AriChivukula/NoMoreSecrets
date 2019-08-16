@@ -14,7 +14,7 @@ jobs:
         bash docker.sh
         docker push 617580300246.dkr.ecr.us-east-1.amazonaws.com/nomoresecrets:master
         bash terraform.sh
-        ./terraform apply -auto-approve .
+        ./terraform apply -auto-approve . > /dev/null
       env:
         AWS_DEFAULT_REGION: us-east-1
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
