@@ -4,6 +4,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
+    - uses: actions/setup-python@master
     - name: Setup and Test
       run: |
         bash vault.sh
