@@ -13,15 +13,15 @@ variable "DOMAIN" {
 }
 
 variable "AWS_ACCESS_KEY_ID" {
-  hidden = true
+  sensitive = true
 }
 
 variable "AWS_DEFAULT_REGION" {
-  hidden = true
+  sensitive = true
 }
 
 variable "AWS_SECRET_ACCESS_KEY" {
-  hidden = true
+  sensitive = true
 }
 
 data "aws_vpc" "VPC" {
