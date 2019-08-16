@@ -10,7 +10,7 @@ jobs:
         bash vault.sh
         bash docker.sh
         bash terraform.sh
-        ./terraform plan .
+        ./terraform plan . > /dev/null
       env:
         AWS_DEFAULT_REGION: us-east-1
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
