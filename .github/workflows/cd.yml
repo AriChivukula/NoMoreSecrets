@@ -8,7 +8,7 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - uses: actions/setup-python@master
-    - name: Setup and Test
+    - name: Setup and Deploy
       run: |
         bash vault.sh
         bash docker.sh
