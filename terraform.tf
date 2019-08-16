@@ -12,11 +12,17 @@ variable "DOMAIN" {
   default = "nomoresecrets.chivuku.la"
 }
 
-variable "AWS_ACCESS_KEY_ID" {}
+variable "AWS_ACCESS_KEY_ID" {
+  hidden = true
+}
 
-variable "AWS_DEFAULT_REGION" {}
+variable "AWS_DEFAULT_REGION" {
+  hidden = true
+}
 
-variable "AWS_SECRET_ACCESS_KEY" {}
+variable "AWS_SECRET_ACCESS_KEY" {
+  hidden = true
+}
 
 data "aws_vpc" "VPC" {
   tags = {
